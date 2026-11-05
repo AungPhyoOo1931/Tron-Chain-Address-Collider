@@ -52,7 +52,7 @@ async function generate() {
         const address = privateKeyToTronAddress(privateKey);
 
         // 每生成一条就写
-        if (!addressStream.write(`${address},${mnemonic}\n`)) {
+        if (!addressStream.write(`${address}\n`)) {
             await new Promise(resolve =>
                 addressStream.once('drain', resolve)
             );
@@ -62,8 +62,9 @@ async function generate() {
             matchedStream.write(`${address},${mnemonic},${privateKey}\n`);
             console.log('🎯 MATCH FOUND:', address);
         }
-
-        console.log(`本轮碰撞次数： ${i + 1} 次：${address}助记词：${mnemonic}`);
+        if(i % 10000 === 0){
+            console.log(`本轮碰撞次数： ${i} 次：${address}助记词：${mnemonic}`);
+        }
     }
 
     addressStream.end();
